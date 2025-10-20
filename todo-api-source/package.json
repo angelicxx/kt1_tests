@@ -1,0 +1,32 @@
+{
+  "name": "todo-api-assignment",
+  "version": "1.0.0",
+  "description": "REST API for managing a todo list with validation, error handling, Swagger docs, and Postman tests.",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "NODE_ENV=development node src/server.js",
+    "init:db": "node src/scripts/initDb.js"
+  },
+  "keywords": [
+    "express",
+    "todo",
+    "swagger",
+    "openapi",
+    "sqlite",
+    "validation"
+  ],
+  "author": "Student",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "joi": "^17.12.3",
+    "morgan": "^1.10.0",
+    "sqlite3": "^5.1.7",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.4.5"
+  }
+}

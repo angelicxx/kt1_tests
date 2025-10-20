@@ -1,0 +1,165 @@
+openapi: 3.0.3
+info:
+  title: Todo List API
+  version: 1.0.0
+  description: |
+    Простое REST API для управления списком задач.
+    Включает валидацию, обработку ошибок и Swagger UI.
+servers:
+  - url: http://localhost:3000
+paths:
+  /tasks:
+    post:
+      summary: Создать задачу
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreate'
+            examples:
+              valid:
+                value:
+                  title: "Купить молоко"
+                  description: "2 литра"
+                  completed: false
+      responses:
+        '201':
+          description: Создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    get:
+      summary: Список задач
+      parameters:
+        - name: completed
+          in: query
+          schema:
+            type: boolean
+          description: Фильтрация по статусу выполнения
+      responses:
+        '200':
+          description: ОК
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /tasks/{id}:
+    get:
+      summary: Получить задачу по ID
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: ОК
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Обновить задачу
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+            examples:
+              patch:
+                value:
+                  title: "Обновленный заголовок"
+                  completed: true
+      responses:
+        '200':
+          description: ОК
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Удалить задачу
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '204':
+          description: Удалено
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  parameters:
+    TaskId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Идентификатор задачи
+  schemas:
+    Task:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        title: { type: string, example: "Купить молоко" }
+        description: { type: string, example: "2 литра" }
+        completed: { type: boolean, example: false }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+      required: [id, title, completed, created_at, updated_at]
+    TaskCreate:
+      type: object
+      properties:
+        title: { type: string }
+        description: { type: string }
+        completed: { type: boolean, default: false }
+      required: [title]
+    TaskUpdate:
+      type: object
+      properties:
+        title: { type: string }
+        description: { type: string }
+        completed: { type: boolean }
+      description: Должно содержать хотя бы одно поле
+  responses:
+    BadRequest:
+      description: Неверный запрос
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, example: "ValidationError" }
+              message: { type: string }
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    message: { type: string }
+                    path:
+                      type: array
+                      items: { type: string }
+    NotFound:
+      description: Не найдено
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, example: "NotFound" }
+              message: { type: string, example: "Task not found" }
