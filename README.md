@@ -188,7 +188,7 @@ npm start
 ## Swagger документация
 
 Подробная спецификация API доступна по адресу:  
-➡️ [http://localhost:3000/docs](http://localhost:3000/docs)
+ [http://localhost:3000/docs](http://localhost:3000/docs)
 
 Файл спецификации находится в проекте по пути:  
 `/docs/openapi.yaml`
